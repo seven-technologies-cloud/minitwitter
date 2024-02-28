@@ -1,1 +1,1 @@
-# minitwitter
+# Mini Twitter
