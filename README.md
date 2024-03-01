@@ -19,7 +19,7 @@ yarn add axios
 ### Inside let's **src** create a folder named api file axios.js
 Inside it we will create a new instance of axios to be used anywhere in the project.
 
-```json
+```bash
 import axios from "axios";
 const baseURL = process.env.REACT_APP_BACKEND_URL
 export const api = axios.create({
@@ -46,7 +46,7 @@ I removed this code with being mocked
 ```
 #### To search for user in the API
 And using get together with the .env uuid
-```json
+```bash
 async getUserLoggedIn() {            
     const {data} = await api.get(`user?id_user=${process.env.REACT_APP_LOGGED_USER_ID }`);   
     localStorage.setItem("user_logged", JSON.stringify(data[0]));    
@@ -57,7 +57,7 @@ Above, configuration is also done in localStorage, to avoid frequent API searche
 ### inside the Hook folder userAuth.js file
 Here, we will have to change the way we are getting the user, which is currently done through userService.getUserLoggedIn. However, to avoid unnecessary calls, let's change the method
 
-```bash
+```json
 export function useAuth() {
 5  const [user, setUser] = useState({});
 
@@ -74,7 +74,7 @@ export function useAuth() {
   });
 ```
 
-```bash
+```json
 11 async function getUserLoggedInOnLoad() {
     const userLoggedIn = await userService.getUserLoggedIn();
     setUser(userLoggedIn);
