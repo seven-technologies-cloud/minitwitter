@@ -106,14 +106,14 @@ Inside the FeedPage() component, we will look for a "logged in" user.
   const {user} =useAuth()
 ```
 
-Na line 74 onde esta somente 
+On line 74 where it is only
 ```json 
  <FeedTitle>
   74  your <span>feed</span>.
   </FeedTitle>
 ```
 Let's exchange for
-```json 
+```bash 
   <FeedTitle>
 74    This is Your <span>Feed</span> @{user?.username}!
   </FeedTitle>
@@ -143,7 +143,7 @@ async getAllPosts() {
   },
 ```
   **to put this:**
-```json
+```bash
  async getAllPosts() {  
       try {           
         const res = await  api.get(`/post`)               
@@ -179,7 +179,7 @@ return new Promise((resolve, reject) => {
     });
 ```
 And add the api call, for when opening the modal
-```json
+```bash
    async getPostsByUserId({ userId }) {
     try {
       const res = await api.get(`/post?user_id=${userId}`)
@@ -220,7 +220,7 @@ let's change from this...
 ```
 to this...
 
-```json
+```bash
 17:  userId: user.id_user,
 
 21:  [user.id_user]
@@ -238,7 +238,7 @@ Example:
 ```
 to this 
 
-```json
+```bash
 30  userFollows.indexOf(currentPost.user_id) > -1 && 
 
 38  (currentPost) => currentPost?.user_id === userIdToFilterPosts, 
@@ -268,7 +268,7 @@ keep the question mark in case you are not sending a parameter
 
 to this...
 
-```json
+```bash
 49 <div key={currentPost.id_post}>
     <PostCard
 51      postId={currentPost?.id_post}
@@ -288,7 +288,7 @@ to this...
 
 ### Creating useStates to store states
 
-```json
+```bash
  type = "post" // As there is no type in the db, we are putting it at the code level to make it easier. 
 
   const [userPost, setUserPost ] = useState()//to store poster user information  
@@ -298,7 +298,7 @@ to this...
 ### A useEffect was created to manage these updates
 useEffect created right after the states mentioned before.
 
-```json
+```bash
   useEffect(()=>{
     if (!prevAuthors.current.has(author)) {
       const fetchPosts = async () => {
@@ -329,7 +329,7 @@ change in author.id to createdBy
 ```
 to  this.. 
 
-```json
+```bash
 31  onProfileClick(author);
 
 
@@ -356,7 +356,7 @@ line 67
 
 ```
 to this...
-```json
+```bash
 line 44  
   @{userPost?.username}
 
@@ -382,7 +382,7 @@ Line 49
   <p>{dateFormatter(selectedUser?.createdAt)}</p>
 ```
 to this..
-```json
+```bash
 Line 49 
   <p>{dateFormatter(selectedUser?.date_joined)}</p>
 ```
@@ -422,7 +422,7 @@ Let's remove from inside the function **getUserFollowers**...
 ```
 and put
 
-```json
+```bash
 // how many people are following the logged in user.
   async getUserFollowers({ userId }) {
 try {
@@ -460,7 +460,7 @@ return new Promise((resolve, reject) => {
 ```
 And add the api call inside the function.
 
-```json
+```bash
  async getWhoUserFollows({ userId }) {
     try {
       const res = await api(`userfollowsuser?user_id=${userId}`)
@@ -477,7 +477,7 @@ And add the api call inside the function.
 ## Add follow or unfollow functions.
 Let's create two functions for this inside the modal to make it easier to see.
 ### **follow**  
-```json
+```bash
   const follow  =async ()=>{    
     const data = {
       user_id: loggedInUser.id_user, //id user
@@ -497,7 +497,7 @@ Let's create two functions for this inside the modal to make it easier to see.
 ```
 
 ### **unFollow**
-```json
+```bash
  const unfollow  = async ()=>{
      const data = {
       user_id: loggedInUser.id_user,
@@ -568,7 +568,7 @@ const [isLoggedInUserFollowing, setIsLoggedInUserFollowing] = useState([]);//sto
 ### Inside the **getAmountO Followers** function, let's put setIsLoggedInUse Following
 that has been modified
 
-```json
+```bash
   const getAmountOfFollowers = useCallback(async () => {
     const followers = await followersService.getUserFollowers({
       userId: userToGetInfoId,
@@ -581,7 +581,7 @@ that has been modified
 let's use **setIsLoggedInUserFollowing** to check if the user is following the post owner.<br>
 Creating a variable with **some** that returns true or false:
 
-```json  
+```bash  
 const isFallow = (isLoggedInUserFollowing ?? []).some(fallow => fallow?.user_id === loggedInUser?.id_user); 
 ``` 
 
@@ -593,7 +593,7 @@ Line 73 e 74
 ```
 to 
 
-```json
+```bash
   onClick={isFallow? unfollow: follow}
   text={ isFallow ? "Unfollow" : "Follow"}
 ```
@@ -606,7 +606,7 @@ Line 44:  userId: user.id,
 });
 ```
 to this...
-```json
+```bash
 Line 44 : userId: user.id_user,
 ```
 and
