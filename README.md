@@ -472,7 +472,7 @@ And add the api call inside the function.
   }  
 ```
 
-# Follow.... start making posts and delete
+# Follow.... start making posts and deletes api
 
 ## Add follow or unfollow functions.
 Let's create two functions for this inside the modal to make it easier to see.
@@ -597,8 +597,6 @@ to
   onClick={isFallow? unfollow: follow}
   text={ isFallow ? "Unfollow" : "Follow"}
 ```
-
-
 # Create a post 
 ###Inside the hook folder, in the **createPost** function
 let's change the way the ID is being received and the condition to check how it is coming from the API.
