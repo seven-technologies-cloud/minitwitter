@@ -23,7 +23,7 @@ export function PostsProvider({ children }) {
 
   async function isUserAbleToPost() {
     const isUserAllowedToPost = await postsService.isUserAllowedToPost({
-      userId: user.id,
+      userId: user.id_user,
     });
 
     if (!isUserAllowedToPost) {
@@ -41,7 +41,7 @@ export function PostsProvider({ children }) {
 
     const successfullyPosted = await postsService.createPost({
       postText,
-      userId: user.id,
+      userId: user.id_user,
     });
 
     if (successfullyPosted?.error) {
@@ -54,6 +54,17 @@ export function PostsProvider({ children }) {
     await fetchPosts();
   }
 
+  async function deletePost(postId) { 
+    const successfullyDeleted = await postsService.deletePost({ postId});
+    if (successfullyDeleted?.message) {
+      toast.error(successfullyDeleted?.message);
+      return;
+    }
+    
+    toast.success("Successfully deleted!");
+    await fetchPosts();
+  }
+
   async function createQuote({ postId, quoteText }) {
     const userAllowedToPost = await isUserAbleToPost();
     if (!userAllowedToPost) return;
@@ -61,7 +72,7 @@ export function PostsProvider({ children }) {
     const successfullyQuoted = await postsService.createQuote({
       postId,
       quoteText,
-      userId: user.id,
+      userId: user.id_user,
     });
 
     if (successfullyQuoted?.error) {
@@ -82,7 +93,7 @@ export function PostsProvider({ children }) {
 
     const successfullyReposted = await postsService.createRepost({
       postId,
-      userId: user.id,
+      userId: user.id_user,
     });
 
     if (successfullyReposted?.error) {
@@ -104,6 +115,7 @@ export function PostsProvider({ children }) {
         createRepost,
         selectedPostToQuote,
         setSelectedPostToQuote,
+        deletePost
       }}
     >
       {children}

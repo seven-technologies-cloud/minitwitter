@@ -13,7 +13,7 @@ export function useUserInfo({ userToGetInfoId }) {
   const [userFollowers, setUserFollowers] = useState(0);
   const [userFollows, setWhoUserFollows] = useState(0);
 
-  const [isLoggedInUserFollowing, setIsLoggedInUserFollowing] = useState(false);
+  const [isLoggedInUserFollowing, setIsLoggedInUserFollowing] = useState([]);
 
   const getUser = useCallback(async () => {
     const user = await userService.getUserById({ id: userToGetInfoId });
@@ -24,7 +24,7 @@ export function useUserInfo({ userToGetInfoId }) {
     const followers = await followersService.getUserFollowers({
       userId: userToGetInfoId,
     });
-
+    setIsLoggedInUserFollowing(followers)
     setUserFollowers(followers.length);
   }, [userToGetInfoId]);
 
@@ -44,22 +44,20 @@ export function useUserInfo({ userToGetInfoId }) {
     setPostsAmount(postsAmount.length);
   }, [userToGetInfoId]);
 
-  const verifyIfIsLoggedInUserFollowing = useCallback(async () => {
-    const isFollowing = await followersService.isFollowing({
-      followerUserId: user.id,
-      userIdToCheck: userToGetInfoId,
-    });
+  // const verifyIfIsLoggedInUserFollowing = useCallback(async () => {
+  //   const isFollowing = await followersService.isFollowing({
+  //     followerUserId: user.id,
+  //     userIdToCheck: userToGetInfoId,
+  //   });
 
-    setIsLoggedInUserFollowing(isFollowing);
-  }, [user.id, userToGetInfoId]);
+  //   setIsLoggedInUserFollowing(isFollowing);
+  // }, [user.id, userToGetInfoId]);
 
   useEffect(() => {
     getUser();
 
     getAmountOfFollowers();
     getAmountOfFollowings();
-
-    verifyIfIsLoggedInUserFollowing();
 
     getAmountOfPostsByUserId();
   }, [
@@ -68,20 +66,19 @@ export function useUserInfo({ userToGetInfoId }) {
     getAmountOfFollowers,
     getAmountOfFollowings,
     getAmountOfPostsByUserId,
-    verifyIfIsLoggedInUserFollowing,
   ]);
 
   async function followOrUnfollowUser() {
     if (isLoggedInUserFollowing) {
       await followersService.unfollow({
-        followerUserId: user.id,
+        followerUserId: user.id_user,
         userIdToUnfollow: userToGetInfoId,
       });
 
       setIsLoggedInUserFollowing(false);
     } else {
       await followersService.follow({
-        followerUserId: user.id,
+        followerUserId: user.id_user,
         userIdToFollow: userToGetInfoId,
       });
 

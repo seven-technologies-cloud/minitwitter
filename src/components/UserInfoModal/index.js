@@ -3,17 +3,19 @@ import { useUserInfo } from "../../hooks/useUserInfo";
 import { dateFormatter } from "../../utils/date";
 import { AddPost } from "../AddPost";
 import { Button } from "../Button";
-import { PostsList } from "../PostsList";
+// import { PostsList } from "../PostsList";
 import { Divider } from "../PostsList/styles";
 import {
   AddPostContainer,
   ButtonContainer,
   CloseButton,
-  UserFeedTitle,
+  // UserFeedTitle,
   UsernameTitle,
   UserPropertiesContainer,
   UserPropertyItemWrapper,
 } from "./styles";
+import { api } from "../../api/axios";
+import { toast } from "react-toastify";
 
 export function UserInfoModal({ onCloseModal, userId }) {
   const {
@@ -22,11 +24,40 @@ export function UserInfoModal({ onCloseModal, userId }) {
     selectedUser,
     loggedInUser,
     userFollowers,
-    followOrUnfollowUser,
+    // followOrUnfollowUser,
     isLoggedInUserFollowing,
   } = useUserInfo({
     userToGetInfoId: userId,
   });
+
+  const unfollow = async()=>{
+    const data = {
+      user_id: loggedInUser?.id_user,
+      follows_user_id: selectedUser?.id_user
+    }
+    try {
+      const res = api.delete(`userfollowsuser`, {data:data})
+      console.log(res)
+      toast.success("Unfollowed successfully")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const follow = async()=>{
+    const data = {
+      user_id: loggedInUser?.id_user,
+      follows_user_id: selectedUser?.id_user
+    }
+    try {
+      const res = api.post(`userfollowsuser`, data)
+      console.log(res)
+      toast.success("Followed successfully")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const isFallow = (isLoggedInUserFollowing?? []).some(fallow => fallow?.user_id === loggedInUser.id_user)
 
   return (
     <Modal
@@ -46,7 +77,7 @@ export function UserInfoModal({ onCloseModal, userId }) {
       <UserPropertiesContainer>
         <UserPropertyItemWrapper>
           <h4>Member since:</h4>
-          <p>{dateFormatter(selectedUser?.createdAt)}</p>
+          <p>{dateFormatter(selectedUser?.date_joined)}</p>
         </UserPropertyItemWrapper>
 
         <UserPropertyItemWrapper>
@@ -67,11 +98,11 @@ export function UserInfoModal({ onCloseModal, userId }) {
 
       <Divider />
 
-      {userId !== loggedInUser.id && (
+      {userId !== loggedInUser?.id_user && (
         <ButtonContainer>
           <Button
-            onClick={followOrUnfollowUser}
-            text={isLoggedInUserFollowing ? "Unfollow" : "Follow"}
+            onClick={isFallow ? unfollow : follow}
+            text={isFallow ? "Unfollow" : "Follow"}
           />
         </ButtonContainer>
       )}
@@ -84,13 +115,13 @@ export function UserInfoModal({ onCloseModal, userId }) {
 
       <Divider />
 
-      <UserFeedTitle>
+      {/* <UserFeedTitle>
         {selectedUser?.name?.toLowerCase()} <span>posts</span>.
       </UserFeedTitle>
 
       <Divider />
 
-      <PostsList userIdToFilterPosts={userId} />
+      <PostsList userIdToFilterPosts={userId} /> */}
     </Modal>
   );
 }

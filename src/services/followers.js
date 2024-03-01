@@ -1,5 +1,6 @@
 import { localStorageKeys } from "../constants/local-storage-keys";
 import { followersMock } from "../__mocks__/followers";
+import { api } from "../api/axios";
 
 export const followersService = {
   populate() {
@@ -34,43 +35,57 @@ export const followersService = {
   },
 
   async getUserFollowers({ userId }) {
-    return new Promise((resolve, reject) => {
-      followersService.populate();
+    try {
+      const res  = await api(`userfollowsuser?follows_user_id=${userId}`)
+      return res.data
+    } catch (error) {
+      
+    }
+  
 
-      try {
-        const followersFromAPI = localStorage.getItem(
-          localStorageKeys.FOLLOWERS
-        );
-        const followersParsedToJSON = JSON.parse(followersFromAPI);
+    // return new Promise((resolve, reject) => {
+    //   followersService.populate();
 
-        const userFollowers = followersParsedToJSON.filter(
-          (follower) => follower.followingUserId === userId
-        );
+    //   try {
+    //     const followersFromAPI = localStorage.getItem(
+    //       localStorageKeys.FOLLOWERS
+    //     );
+    //     const followersParsedToJSON = JSON.parse(followersFromAPI);
 
-        resolve(userFollowers);
-      } catch (error) {
-        reject({ error: "Error to fetch data, try again later." });
-      }
-    });
+    //     const userFollowers = followersParsedToJSON.filter(
+    //       (follower) => follower.followingUserId === userId
+    //     );
+
+    //     resolve(userFollowers);
+    //   } catch (error) {
+    //     reject({ error: "Error to fetch data, try again later." });
+    //   }
+    // });
   },
 
   async getWhoUserFollows({ userId }) {
-    return new Promise((resolve, reject) => {
-      followersService.populate();
+    try {
+      const res  = await api(`userfollowsuser?user_id=${userId}`)
+      return res.data
+    } catch (error) {
+      
+    }
+    // return new Promise((resolve, reject) => {
+    //   followersService.populate();
 
-      try {
-        const followsFromAPI = localStorage.getItem(localStorageKeys.FOLLOWERS);
-        const followsParsedToJSON = JSON.parse(followsFromAPI);
+    //   try {
+    //     const followsFromAPI = localStorage.getItem(localStorageKeys.FOLLOWERS);
+    //     const followsParsedToJSON = JSON.parse(followsFromAPI);
 
-        const userFollows = followsParsedToJSON.filter(
-          (follower) => follower.followerUserId === userId
-        );
+    //     const userFollows = followsParsedToJSON.filter(
+    //       (follower) => follower.followerUserId === userId
+    //     );
 
-        resolve(userFollows);
-      } catch (error) {
-        reject({ error: "Error to fetch data, try again later." });
-      }
-    });
+    //     resolve(userFollows);
+    //   } catch (error) {
+    //     reject({ error: "Error to fetch data, try again later." });
+    //   }
+    // });
   },
 
   async follow({ followerUserId, userIdToFollow }) {

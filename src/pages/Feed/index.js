@@ -13,6 +13,7 @@ import {
   FeedTitle,
   PostsListContainer,
 } from "./styles";
+import { useAuth } from "../../hooks/useAuth";
 
 export function FeedPage() {
   const [isUserInfoModalOpen, setUserInfoModalOpen] = useState(false);
@@ -62,6 +63,7 @@ export function FeedPage() {
     setFilterMode(validRoutes.FILTER_ALL);
     history.push(`/${validRoutes.USER_INFO}`);
   }
+  const {user} = useAuth()
 
   return (
     <FeedContainer>
@@ -71,7 +73,7 @@ export function FeedPage() {
 
       <FeedHeaderContainer>
         <FeedTitle>
-          your <span>feed</span>.
+          your {user.username} <span>feed</span>.
         </FeedTitle>
 
         <FeedFilter selectedMode={handleOnChangeFitlerMode} />

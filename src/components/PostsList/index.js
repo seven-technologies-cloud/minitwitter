@@ -9,16 +9,16 @@ import { Divider } from "./styles";
 export function PostsList({ onProfileClick, userIdToFilterPosts, filterMode }) {
   const { user } = useAuth();
   const { posts } = usePosts();
-
+  
   const [userFollows, setUserFollows] = useState([]);
 
   const getUserFollows = useCallback(async () => {
     const userFollows = await followersService.getWhoUserFollows({
-      userId: user.id,
+      userId: user.id_user,
     });
 
-    setUserFollows(userFollows.map((userFollow) => userFollow.followingUserId));
-  }, [user.id]);
+    setUserFollows(userFollows?.map((userFollow) => userFollow.followingUserId));
+  }, [user.id_user]);
 
   const returnPostsFiltered = useCallback(() => {
     const isOnlyFollowingPostsFilter =
@@ -27,7 +27,7 @@ export function PostsList({ onProfileClick, userIdToFilterPosts, filterMode }) {
     if (isOnlyFollowingPostsFilter) {
       return posts.filter((currentPost) => {
         return (
-          userFollows.indexOf(currentPost.createdBy.id) > -1 && currentPost
+          userFollows.indexOf(currentPost?.user_id) > -1 && currentPost
         );
       });
     }
@@ -35,7 +35,7 @@ export function PostsList({ onProfileClick, userIdToFilterPosts, filterMode }) {
     if (!userIdToFilterPosts) return posts;
 
     return posts.filter(
-      (currentPost) => currentPost.createdBy.id === userIdToFilterPosts
+      (currentPost) => currentPost?.user_id === userIdToFilterPosts
     );
   }, [filterMode, posts, userFollows, userIdToFilterPosts]);
 
@@ -45,16 +45,16 @@ export function PostsList({ onProfileClick, userIdToFilterPosts, filterMode }) {
 
   return (
     <>
-      {returnPostsFiltered().map((currentPost, index) => (
-        <div key={currentPost.id}>
+      {returnPostsFiltered()?.map((currentPost, index) => (
+        <div key={currentPost?.id_post}>
           <PostCard
-            postId={currentPost.id}
-            type={currentPost.type}
-            text={currentPost.text}
-            author={currentPost.author}
+            postId={currentPost?.id_post}
+            type={currentPost?.type}
+            text={currentPost?.post}
+            author={currentPost?.user_id}
             onProfileClick={onProfileClick}
-            createdBy={currentPost.createdBy}
-            quoteText={currentPost?.quote?.text}
+            createdBy={currentPost?.user_id}
+            quoteText={currentPost?.post}
             quoteUser={currentPost?.quote?.author}
           />
 

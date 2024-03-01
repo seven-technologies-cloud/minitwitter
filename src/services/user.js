@@ -1,5 +1,6 @@
 import { localStorageKeys } from "../constants/local-storage-keys";
 import { usersMock } from "../__mocks__/users";
+import { api } from "../api/axios";
 
 export const userService = {
   populate() {
@@ -9,33 +10,17 @@ export const userService = {
     localStorage.setItem(localStorageKeys.USERS, JSON.stringify(usersMock));
   },
 
-  async getUserLoggedIn() {
-    return new Promise((resolve) => {
-      resolve({
-        id: "797f6ce2-9f14-4c46-bf5e-05d446b34c84",
-        name: "Lucas Polizeli",
-        createdAt: 1652063207108,
-        username: "lucas",
-      });
-    });
+  async getUserLoggedIn() {            
+      const {data} = await api.get(`user?id_user=${process.env.REACT_APP_LOGGED_USER_ID }`);   
+      localStorage.setItem("user_logged", JSON.stringify(data[0]));    
   },
 
   async getUserById({ id }) {
-    return new Promise((resolve, reject) => {
-      try {
-        const responseFromAPI = localStorage.getItem(localStorageKeys.USERS);
-        const userParsedToJSON = JSON.parse(responseFromAPI);
-
-        const filteredUser = userParsedToJSON.find((user) => user.id === id);
-
-        if (filteredUser) {
-          resolve(filteredUser);
-        } else {
-          reject({ error: "User not found" });
-        }
-      } catch (error) {
-        reject({ error: "Error to fetch data, try again later." });
-      }
-    });
+    try {
+      const {data} = await api.get(`user?id_user=${id}`)
+      return data[0]
+    } catch (error) {
+      console.log(error)
+    }
   },
 };
